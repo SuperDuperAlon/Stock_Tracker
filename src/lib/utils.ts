@@ -8,3 +8,4 @@ function generateRandomId(): string {
     }
     return id;
 }
+

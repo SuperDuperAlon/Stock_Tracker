@@ -83,7 +83,9 @@ export default function Home() {
                 <tr key={stock.id}>
                   <td>{stock.ticker}</td>
                   <td>{stock.name}</td>
+                  {/* TODO: util function for creating random price*/}
                   <td>${stock.price.toLocaleString()}</td>
+                  {/* TODO: util function for creating random distance from 52high*/}
                   <td>{priceFromHigh52w(stock.price, stock.high_52w)}%</td>
                 </tr>
               ))}
