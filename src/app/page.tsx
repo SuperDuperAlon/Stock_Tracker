@@ -1,95 +1,96 @@
-import Image from "next/image";
+'use client'
+
 import styles from "./page.module.css";
-
+import { stockService } from "@/services/stock.service";
+import { utils } from '@/lib/utils'
+import { useEffect, useState } from "react";
 export default function Home() {
+
+  const [stocks, setStocks] = useState<Stock[] | null>(null);
+  const [stockName, setStockName] = useState<string>('');
+
+  useEffect(() => {
+    const fetchStocks = () => {
+      const fetchedStocks = stockService.queryStocks();
+      setStocks(fetchedStocks as Stock[]);
+    };
+    fetchStocks();
+  }, []);
+
+  const handleAddStock = (ev: React.FormEvent<HTMLFormElement>) => {
+    ev.preventDefault();
+    if (!stockName || null) return
+    // TODO: Create single stock in service
+
+    const stockToAdd = {
+      ticker: stockName.substring(0, 3).toUpperCase(),
+      name: stockName,
+      price: Math.random() * 100,
+      high_52w: Math.random() * 100,
+      id: utils.generateRandomId()
+    };
+
+    stockService.addStock(stockToAdd);
+    setStocks(prevStocks => (prevStocks ? [...prevStocks, stockToAdd] : [stockToAdd]))
+    setStockName('');
+  };
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) =>  {
+    setStockName(event.target.value);
+  };
+
+
+  const priceFromHigh52w = (price: number, high_52w: number) => {
+    return ((price / high_52w) * 100).toFixed(2)
+  }
+
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
+    <main>
+      <section className={styles.container}>
+        <h1>
+          Stock Tracker
+        </h1>
+        <form onSubmit={handleAddStock}>
+          <input
+            type="text"
+            value={stockName}
+            onChange={handleChange}
+          />
+          <button type="submit">Add Stock</button>
+        </form>
+        {/* TODO: Move table to component List */}
+        <table>
+          <thead>
+            <tr>
+              <th>
+                Ticker
+              </th>
+              <th>
+                Company
+              </th>
+              <th>
+                Price
+              </th>
+              <th>
+                From High
+              </th>
+            </tr>
+          </thead>
+          {stocks && (
+            <tbody>
+              {stocks.map((stock) => (
+                <tr key={stock.id}>
+                  <td>{stock.ticker}</td>
+                  <td>{stock.name}</td>
+                  <td>${stock.price.toLocaleString()}</td>
+                  <td>{priceFromHigh52w(stock.price, stock.high_52w)}%</td>
+                </tr>
+              ))}
+            </tbody>
+          )}
+        </table>
+      </section>
     </main>
-  );
+  )
 }
