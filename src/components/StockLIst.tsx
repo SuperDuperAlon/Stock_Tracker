@@ -1,6 +1,5 @@
 import { utils } from '@/lib/utils'
 import { stockListTableHeaders } from '@/lib/data'
-import { stockService } from '@/services/stock.service'
 
 interface StockProps {
     stocks: Stock[],
@@ -25,7 +24,7 @@ const StockLIst = ({ stocks, onDeleteStock }: StockProps) => {
                         <tr key={stock.id}>
                             <td>{stock.ticker}</td>
                             <td>{utils.capitalizeWord(stock.name)}</td>
-                            <td>${stock.price.toFixed(2)}</td>
+                            <td>${+stock.price.toFixed(2)}</td>
                             <td>{utils.priceFromHigh52w(stock.price, stock.high_52w)}%</td>
                             <td><button onClick={() => onDeleteStock(stock.id)}>Delete</button></td>
                         </tr>
