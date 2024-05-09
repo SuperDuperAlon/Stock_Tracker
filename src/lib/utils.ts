@@ -1,4 +1,4 @@
-export const utils = { generateRandomId, priceFromHigh52w, generateStock }
+export const utils = { generateRandomId, priceFromHigh52w, generateStock, capitalizeWord }
 
 function generateRandomId(): string {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -22,4 +22,8 @@ function generateStock(stockName: string) {
         high_52w: Math.random() * 100,
         id: generateRandomId()
     }
+}
+
+function capitalizeWord(word: string): string {
+    return word.charAt(0).toUpperCase() + word.slice(1);
 }

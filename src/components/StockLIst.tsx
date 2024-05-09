@@ -24,8 +24,8 @@ const StockLIst = ({ stocks, onDeleteStock }: StockProps) => {
                     {stocks.map((stock) => (
                         <tr key={stock.id}>
                             <td>{stock.ticker}</td>
-                            <td>{stock.name}</td>
-                            <td>${stock.price.toLocaleString()}</td>
+                            <td>{utils.capitalizeWord(stock.name)}</td>
+                            <td>${stock.price.toFixed(2)}</td>
                             <td>{utils.priceFromHigh52w(stock.price, stock.high_52w)}%</td>
                             <td><button onClick={() => onDeleteStock(stock.id)}>Delete</button></td>
                         </tr>
