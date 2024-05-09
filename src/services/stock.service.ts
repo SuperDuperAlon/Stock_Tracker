@@ -5,8 +5,6 @@
 // READ
 // UPDATE
 // TODO: Delete Stock From list
-// TODO: List stocks   
-// TODO: Create - util genereal service 
 
 import { getDataFromLocalStorage, setDataInLocalStorage } from '@/services/storage.service';
 import { stockData } from '@/lib/data';
