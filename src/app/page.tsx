@@ -19,15 +19,20 @@ export default function Home() {
     fetchStocks();
   }, []);
 
-  const handleAddStock = (ev: React.FormEvent<HTMLFormElement>) => {
-    ev.preventDefault();
-    if (!stockName || null) return
-    const stockToAdd = utils.generateStock(stockName);
-    stockService.addStock(stockToAdd);
-    setStocks(prevStocks => (prevStocks ? [...prevStocks, stockToAdd] : [stockToAdd]))
-    setStockName('');
-  };
+  const onDeleteStock = (id: string) => {
+    stockService.removeStock(id);
+    setStocks(prevStocks => prevStocks && prevStocks.filter(stock => stock.id !== id));
+  }
 
+    const handleAddStock = (ev: React.FormEvent<HTMLFormElement>) => {
+      ev.preventDefault();
+      if (!stockName || null) return
+      const stockToAdd = utils.generateStock(stockName);
+      stockService.addStock(stockToAdd);
+      setStocks(prevStocks => (prevStocks && [...prevStocks, stockToAdd]))
+      setStockName('');
+    };
+    
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setStockName(event.target.value);
   };
@@ -39,7 +44,7 @@ export default function Home() {
         <h1>
           Stock Tracker
         </h1>
-        <StockLIst stocks={stocks} />
+        <StockLIst stocks={stocks} onDeleteStock={onDeleteStock} />
         <form onSubmit={handleAddStock}>
           <input
             type="text"

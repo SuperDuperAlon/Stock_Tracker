@@ -1,11 +1,13 @@
 import { utils } from '@/lib/utils'
 import { stockListTableHeaders } from '@/lib/data'
+import { stockService } from '@/services/stock.service'
 
 interface StockProps {
-    stocks: Stock[]
+    stocks: Stock[],
+    onDeleteStock: (id: string) => void
 }
 
-const StockLIst = ({ stocks }: StockProps) => {
+const StockLIst = ({ stocks, onDeleteStock }: StockProps) => {
     return (
         <>
             <table>
@@ -25,6 +27,7 @@ const StockLIst = ({ stocks }: StockProps) => {
                             <td>{stock.name}</td>
                             <td>${stock.price.toLocaleString()}</td>
                             <td>{utils.priceFromHigh52w(stock.price, stock.high_52w)}%</td>
+                            <td><button onClick={() => onDeleteStock(stock.id)}>Delete</button></td>
                         </tr>
                     ))}
                 </tbody>

@@ -1,15 +1,12 @@
 // CRUDL
 
-// TODO: Create - Add Stock to list
-// TODO: Creare - Database - StocksDB in local storage
 // READ
 // UPDATE
-// TODO: Delete Stock From list
 
 import { getDataFromLocalStorage, setDataInLocalStorage } from '@/services/storage.service';
 import { stockData } from '@/lib/data';
 
-export const stockService = { queryStocks, addStock }
+export const stockService = { queryStocks, addStock, removeStock }
 
 const STORAGE_KEY: string = 'StockDB';
 _checkAndCreateStockDB()
@@ -22,9 +19,16 @@ function queryStocks() {
 
 // TODO: Move to Util file
 function addStock(stockToAdd: Stock) {
-    if (typeof window === 'undefined' || !window.localStorage) return console.log('no local storage');
+    if (typeof window === 'undefined' || !window.localStorage) return
     const existingStocks = getDataFromLocalStorage(STORAGE_KEY) || [];
     const updatedStocks = [...existingStocks as Stock[], stockToAdd];
+    setDataInLocalStorage(STORAGE_KEY, updatedStocks);
+}
+
+function removeStock(id: string) {
+    if (typeof window === 'undefined' || !window.localStorage) return
+    const existingStocks: Stock[] = getDataFromLocalStorage(STORAGE_KEY) || [];
+    const updatedStocks = existingStocks.filter(stock => stock.id !== id);
     setDataInLocalStorage(STORAGE_KEY, updatedStocks);
 }
 

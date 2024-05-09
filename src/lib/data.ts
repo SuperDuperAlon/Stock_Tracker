@@ -7,4 +7,4 @@ export const stockData: Stock[] = [
     { ticker: 'AMZN', name: 'Amazon', price: 1800, high_52w: 2000, id: utils.generateRandomId() },
 ];
 
-export const stockListTableHeaders = ['Ticker', 'Company', 'Price', 'From High'];
+export const stockListTableHeaders = ['Ticker', 'Company', 'Price', 'From High', 'Actions'];
